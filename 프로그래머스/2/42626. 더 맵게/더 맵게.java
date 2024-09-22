@@ -1,25 +1,24 @@
 import java.util.*;
 class Solution {
     public int solution(int[] scoville, int K) {
-        int answer = 0;
+        PriorityQueue<Integer> q = new PriorityQueue<>();
 
-        Queue<Integer> food = new PriorityQueue<>();
-        for(int i=0; i<scoville.length; i++) {
-            food.add(scoville[i]);
+        for(int i = 0; i < scoville.length; i++)
+            q.add(scoville[i]);
+
+        int count = 0;
+        while(q.size() > 1 && q.peek() < K){
+            int weakHot = q.poll();
+            int secondWeakHot = q.poll();
+
+            int mixHot = weakHot + (secondWeakHot * 2);
+            q.add(mixHot);
+            count++;
         }
-        while (food.size() >= 2) {
-            if (food.peek() < K) {
-                int food1 = food.remove();
-                int food2 = food.remove();
-                food.add(food2 * 2 + food1);
-            } else {
-                break;
-            }
-            answer++;
-        }
-        if (food.peek() < K) {
-            return -1;
-        }
-        return answer;
+
+        if(q.size() <= 1 && q.peek() < K)
+            count = -1;
+
+        return count;
     }
 }

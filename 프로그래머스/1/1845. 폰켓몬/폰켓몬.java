@@ -1,11 +1,21 @@
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
+import java.util.*;
 class Solution {
     public int solution(int[] nums) {
-        return Arrays.stream(nums)
-                .boxed()
-                .collect(Collectors.collectingAndThen(Collectors.toSet(),
-                        phonekemons -> Integer.min(phonekemons.size(), nums.length / 2)));
+        int answer = 0;
+        
+        Set<Integer> poSet = new HashSet<>();
+        int numsLength = nums.length;
+        
+        for (int i=0; i<numsLength; i++) {
+            poSet.add(nums[i]);
+        }
+        
+        if (poSet.size() > numsLength/2) {
+            answer = numsLength/2;
+        } else {
+            answer = poSet.size();
+        }
+        
+        return answer;
     }
 }

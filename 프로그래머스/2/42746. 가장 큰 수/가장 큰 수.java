@@ -1,29 +1,28 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class Solution {
     public String solution(int[] numbers) {
-        ArrayList<String> numList = new ArrayList<>();
-        
-        for(int number: numbers) {
-            numList.add(Integer.toString(number));
-        }
-        Collections.sort(numList, new Comparator<String>() {
-            @Override
-            public int compare(String num1, String num2) {
-                String order1 = num1 + num2;
-                String order2 = num2 + num1;
-                return order2.compareTo(order1);
-            }
-        });
-        
         String answer = "";
-        for(String str: numList) {
-            if(answer.equals("0") && str.equals("0")) {
-                continue;
-            }
-            answer += str;
+
+        List<Integer> list = new ArrayList<>();
+        for(int i = 0; i < numbers.length; i++) {
+            list.add(numbers[i]);
         }
-        
-        return answer;
+        Collections.sort(list, (a, b) -> {
+            String as = String.valueOf(a), bs = String.valueOf(b);
+            return -Integer.compare(Integer.parseInt(as + bs), Integer.parseInt(bs + as));
+        });
+        StringBuilder sb = new StringBuilder();
+        for(Integer i : list) {
+            sb.append(i);
+        }
+        answer = sb.toString();
+        if(answer.charAt(0) == '0') {
+            return "0";
+        }else {
+            return answer;
+        }
     }
 }

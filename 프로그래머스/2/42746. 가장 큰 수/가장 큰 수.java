@@ -4,20 +4,30 @@ import java.util.List;
 
 class Solution {
     public String solution(int[] numbers) {
-        String answer = "";
-
-        List<Integer> list = new ArrayList<>();
-        for(int i = 0; i < numbers.length; i++) {
-            list.add(numbers[i]);
+        
+        List<String> arr = new ArrayList<>();
+        
+        for(int num: numbers) {
+            arr.add(Integer.toString(num));
         }
-        Collections.sort(list, (a, b) -> {
-            String as = String.valueOf(a), bs = String.valueOf(b);
-            return -Integer.compare(Integer.parseInt(as + bs), Integer.parseInt(bs + as));
-        });
+        
+        Collections.sort(arr, (a, b) -> (b+a).compareTo(a+b));
+        
+        String answer = "";
+//         for(String str: arr) {
+//             if (answer.equals("0") && str.equals("0")) {
+//                 break;
+//             }
+//             answer += str;
+//         }
+        
+//         return answer;
+        
         StringBuilder sb = new StringBuilder();
-        for(Integer i : list) {
+        for(String i : arr) {
             sb.append(i);
         }
+        
         answer = sb.toString();
         if(answer.charAt(0) == '0') {
             return "0";

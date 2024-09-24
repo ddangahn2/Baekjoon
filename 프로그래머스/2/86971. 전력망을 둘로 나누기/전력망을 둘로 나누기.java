@@ -1,51 +1,47 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-class Solution {  
-    static int answer = 101;
+class Solution {
     public int solution(int n, int[][] wires) {
-        Map<Integer, HashSet<Integer>> graph = new HashMap<>();
-        
-        for(int i=0; i<wires.length; i++){
-            graph.computeIfAbsent(wires[i][0], k->new HashSet<>());
-            graph.computeIfAbsent(wires[i][1], k->new HashSet<>());
-            
-            graph.get(wires[i][0]).add(wires[i][1]);
-            graph.get(wires[i][1]).add(wires[i][0]);
+        init(wires);
+        min = n;
+        allTreeCount = n;
+
+        int count = treeCount(wires[0][0]);
+        if(allTreeCount != count){
+            throw new RuntimeException("로직이 이상한 것");
         }
-        
-        for(int[] wire: wires) {
-            graph.get(wire[0]).remove(wire[1]);
-            boolean[] visited = dfs(graph, wire[0], new boolean[n]);
-            int trueCount = 0;
-            for(int i=0; i<visited.length; i++) {
-                if (visited[i] == true) {
-                    trueCount += 1;
-                }
-            }
-            int falseCount = n - trueCount;
-            if (trueCount > falseCount) {
-                if (answer > trueCount - falseCount) {
-                    answer = trueCount - falseCount;
-                }
-            } else {
-                if (answer > falseCount - trueCount) {
-                    answer = falseCount - trueCount;
-                }
-            }
-            graph.get(wire[0]).add(wire[1]);
-        }
-        
-        return answer;
+
+        return min;
     }
-    public static boolean[] dfs(Map<Integer, HashSet<Integer>> graph, int node, boolean[] visited){
-//         node에서 갈 수 있는애들 모두 찾기
-        HashSet<Integer> adjNodes = graph.get(node);
-        visited[node - 1] = true;
-        for(int adjNode: adjNodes) {
-             if (!visited[adjNode - 1]) {
-                 dfs(graph, adjNode, visited);
-             }
+
+    public void init(int[][] wires){
+        for (int[] wire : wires) {
+            map.putIfAbsent(wire[0], new HashSet<>());
+            map.putIfAbsent(wire[1], new HashSet<>());
+            map.get(wire[0]).add(wire[1]);
+            map.get(wire[1]).add(wire[0]);
         }
-        return visited;
+    }
+    Map<Integer, Set<Integer>> map = new HashMap<>();
+    Set<Integer> visit = new HashSet<>();
+
+    int allTreeCount;
+    int min;
+    public int treeCount(int root){
+        visit.add(root);
+
+        int count = 1;
+
+        for (Integer childNode : map.get(root)) {
+            if(visit.contains(childNode)) continue;
+            count += treeCount(childNode);
+        }
+        int otherTreeCount = allTreeCount - count;
+        min = Math.min(min, Math.abs(count - otherTreeCount));
+
+        return count;
     }
 }

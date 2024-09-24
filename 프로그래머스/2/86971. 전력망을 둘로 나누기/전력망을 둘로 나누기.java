@@ -1,47 +1,37 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-class Solution {
+class Solution {  
+    static Map<Integer, HashSet<Integer>> graph = new HashMap<>();
+    static int N;
+    static int result = 101;
+    static boolean[] visited;
     public int solution(int n, int[][] wires) {
-        init(wires);
-        min = n;
-        allTreeCount = n;
-
-        int count = treeCount(wires[0][0]);
-        if(allTreeCount != count){
-            throw new RuntimeException("로직이 이상한 것");
+        visited = new boolean[n];
+        N = n;
+        for(int[] wire: wires) {
+            graph.computeIfAbsent(wire[0], k -> new HashSet<>());
+            graph.computeIfAbsent(wire[1], k -> new HashSet<>());
+            
+            graph.get(wire[0]).add(wire[1]);
+            graph.get(wire[1]).add(wire[0]);
         }
-
-        return min;
+        
+        dfs(wires[0][0]);
+        
+        return result;
     }
-
-    public void init(int[][] wires){
-        for (int[] wire : wires) {
-            map.putIfAbsent(wire[0], new HashSet<>());
-            map.putIfAbsent(wire[1], new HashSet<>());
-            map.get(wire[0]).add(wire[1]);
-            map.get(wire[1]).add(wire[0]);
-        }
-    }
-    Map<Integer, Set<Integer>> map = new HashMap<>();
-    Set<Integer> visit = new HashSet<>();
-
-    int allTreeCount;
-    int min;
-    public int treeCount(int root){
-        visit.add(root);
-
+    static int dfs(int root) {
+        visited[root-1] = true;
+        
         int count = 1;
-
-        for (Integer childNode : map.get(root)) {
-            if(visit.contains(childNode)) continue;
-            count += treeCount(childNode);
+        
+        for(Integer adjNode: graph.get(root)) {
+            if(!visited[adjNode - 1]) {
+                count += dfs(adjNode);
+            }
         }
-        int otherTreeCount = allTreeCount - count;
-        min = Math.min(min, Math.abs(count - otherTreeCount));
-
+        result = Math.min(result, Math.abs(2*count-N));
+        
         return count;
     }
 }

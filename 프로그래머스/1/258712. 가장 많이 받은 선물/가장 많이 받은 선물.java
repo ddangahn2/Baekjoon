@@ -1,64 +1,31 @@
 import java.util.*;
 
 class Solution {
-    static Map<String, Integer> giftExchange = new HashMap<>();
-    static Map<String, Integer> giftCount = new HashMap<>();
-    
     public int solution(String[] friends, String[] gifts) {
-        int answer = 0;
-        
-        for(String friend: friends) {
-            giftCount.put(friend, 0);
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < friends.length; i++) {
+            map.put(friends[i], i);
         }
-        for(String gift: gifts) {
-            String[] giftFromTo = gift.split(" ");
-            String from = giftFromTo[0];
-            String to = giftFromTo[1];
-            
-            giftExchange.computeIfAbsent(gift, k -> 0);
-            giftExchange.put(gift, giftExchange.get(gift) + 1);
-            
-            giftCount.put(from, giftCount.get(from) + 1);
-            giftCount.put(to, giftCount.get(to) - 1);
+        int[] index = new int[friends.length];
+        int[][] record = new int[friends.length][friends.length];
+
+        for (String str : gifts) {
+            String[] cur = str.split(" ");
+            index[map.get(cur[0])]++;
+            index[map.get(cur[1])]--;
+            record[map.get(cur[0])][map.get(cur[1])]++;
         }
-        
-        for(int i=0; i<friends.length; i++) {
-            int nextMonthGift = 0;
-            for(int j=0; j<friends.length; j++) {
-                String ItoJ = friends[i] + " " + friends[j];
-                String JtoI = friends[j] + " " + friends[i];
-                
-                boolean isItoJ = giftExchange.containsKey(ItoJ);
-                boolean isJtoI = giftExchange.containsKey(JtoI);
-                
-                boolean sameFlag = false;
-                if(isItoJ) {
-                    if(!isJtoI) {
-                        nextMonthGift += 1;
-                    }
-                    else {
-                        if(giftExchange.get(ItoJ) > giftExchange.get(JtoI)) {
-                            nextMonthGift += 1;
-                        }
-                        else if(giftExchange.get(ItoJ) == giftExchange.get(JtoI)) {
-                            sameFlag = true;
-                        }
-                    }
-                }
-                if(!isItoJ && !isJtoI) {
-                    sameFlag = true;
-                }
-                if(sameFlag) {
-                    if(giftCount.get(friends[i]) > giftCount.get(friends[j])) {
-                        nextMonthGift += 1;
-                    }
-                }
-            }
-            if(answer < nextMonthGift) {
-                answer = nextMonthGift;
-            }
-        }
-        
-        return answer;
+
+       int ans = 0;
+       for (int i = 0; i < friends.length; i++) {
+           int cnt = 0;
+           for (int j = 0; j < friends.length; j++) {
+               if(i == j) continue;
+               if (record[i][j] > record[j][i]) cnt++;
+               else if (record[i][j] == record[j][i] && index[i] > index[j]) cnt++; 
+           }
+           ans = Math.max(cnt, ans);
+       }
+        return ans;
     }
 }

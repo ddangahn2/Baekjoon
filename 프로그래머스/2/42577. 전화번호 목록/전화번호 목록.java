@@ -1,26 +1,16 @@
 import java.util.*;
+import java.util.Arrays;
+
 class Solution {
-    public boolean solution(String[] phone_book) {
-        boolean answer = true;
-        boolean flag = false;
-        HashSet<String> pb = new HashSet<>();
-        
-        for (String phone: phone_book) {
-            pb.add(phone);
-        }
-        
-        for (String phone: phone_book) {
-            for(int i=1; i<phone.length(); i++) {
-                if (pb.contains(phone.substring(0, i))) {
-                    answer = false;
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) {
+    public boolean solution(String[] phoneBook) {
+        Arrays.sort(phoneBook);
+        boolean result = true;
+        for (int i=0; i<phoneBook.length-1; i++) {
+            if (phoneBook[i+1].startsWith(phoneBook[i])) {
+                result = false;
                 break;
             }
         }
-        return answer;
+        return result;
     }
 }

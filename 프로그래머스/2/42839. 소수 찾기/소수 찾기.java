@@ -1,42 +1,51 @@
 import java.util.*;
 
 class Solution {
-    static Set<Integer> set = new HashSet<>();
-    static boolean[] isPrime = new boolean[10000000];
+    static Set<Integer> arr = new HashSet<>();
     public int solution(String numbers) {
-        Arrays.fill(isPrime, true);
-        isPrime[0] = isPrime[1] = false;
-        
-        dfs("", numbers);
-        
         int answer = 0;
-        isPrimeFunction();
+        StringBuilder sb = new StringBuilder("");
         
-        for(int i: set) {
-            if(isPrime[i]) {
-                answer++;
+        permutation(numbers, sb, numbers.length());
+        
+        for(int num: arr) {
+            if(isPrime(num)) {
+                answer += 1;
             }
         }
         
         return answer;
     }
-    
-    public void dfs(String prefix, String numbers) {
-        if(!prefix.isEmpty()) {
-            set.add(Integer.parseInt(prefix));
+    public static void permutation(String numbers, StringBuilder sb, int len) {
+        if(sb.length() > 0) {
+            arr.add(Integer.parseInt(sb.toString()));
+            if(sb.length() == len) {
+                return;
+            }
         }
         for(int i=0; i<numbers.length(); i++) {
-            dfs(prefix + numbers.charAt(i), numbers.substring(0, i) + numbers.substring(i+1));
+            int sbLen = sb.length();
+            sb.append(numbers.charAt(i));
+            permutation(numbers.substring(0,i) + numbers.substring(i+1), sb, len);
+            sb.deleteCharAt(sbLen);
         }
     }
-    
-    public void isPrimeFunction() {
-        for(int i=2; i<= Math.sqrt(10000000); i++) {
-            if(isPrime[i]) {
-                for(int j = i*i; j<10000000; j+=i) {
-                    isPrime[j] = false;
+    public static boolean isPrime(int num){
+        if (num < 2) {
+            return false;
+        }
+        int div = 0;
+        for(int i=1; i<=Math.sqrt(num); i++) {
+            if(num % i == 0) {
+                div += 1;
+                if(div > 2) {
+                    break;
                 }
             }
         }
+        if (div == 1) {
+            return true;
+        }
+        return false;
     }
 }

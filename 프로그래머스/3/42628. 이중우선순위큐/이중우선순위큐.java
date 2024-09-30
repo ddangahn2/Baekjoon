@@ -2,41 +2,35 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] operations) {
-        Queue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
         Queue<Integer> minHeap = new PriorityQueue<>();
+        Queue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
         
-        int total = 0;
-        
-        for(String operation: operations) {
-            String[] st = operation.split(" ");
+        for(int i=0; i<operations.length; i++) {
+            String[] operation = operations[i].split(" ");
             
-            int num = Integer.parseInt(st[1]);
+            String op = operation[0];
+            int num = Integer.parseInt(operation[1]);
             
-            if (st[0].equals("I")) {                
-                maxHeap.add(num);
+            if("I".equals(op)) {
                 minHeap.add(num);
-            } 
+                maxHeap.add(num);
+            }
             else {
-                if(maxHeap.isEmpty()) {
+                if (maxHeap.isEmpty()) {
                     continue;
                 }
-                if (num == 1) {
-                    int maxNum = maxHeap.remove();
-                    minHeap.remove(maxNum);
-                } 
+                if(num == 1) {
+                    int del = maxHeap.remove();
+                    minHeap.remove(del);
+                }
                 else {
-                    int minNum = minHeap.remove();
-                    maxHeap.remove(minNum);
+                    int del = minHeap.remove();
+                    maxHeap.remove(del);
                 }
             }
         }
-        
         int[] answer = new int[2];
-        
-        if (maxHeap.isEmpty()) {
-            answer[0] = 0;
-            answer[1] = 0;
-        } else {
+        if(!maxHeap.isEmpty()) {
             answer[0] = maxHeap.remove();
             answer[1] = minHeap.remove();
         }

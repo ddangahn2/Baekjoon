@@ -1,40 +1,88 @@
-import java.util.*;
-
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 class Solution {
-    public int[] solution(String[] operations) {
-        Queue<Integer> minHeap = new PriorityQueue<>();
-        Queue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
-        
-        for(int i=0; i<operations.length; i++) {
-            String[] operation = operations[i].split(" ");
-            
-            String op = operation[0];
-            int num = Integer.parseInt(operation[1]);
-            
-            if("I".equals(op)) {
-                minHeap.add(num);
-                maxHeap.add(num);
-            }
-            else {
-                if (maxHeap.isEmpty()) {
-                    continue;
-                }
-                if(num == 1) {
-                    int del = maxHeap.remove();
-                    minHeap.remove(del);
-                }
-                else {
-                    int del = minHeap.remove();
-                    maxHeap.remove(del);
+    public int[] solution(String[] arguments) {
+        MidV q = new MidV();
+
+        for(int i = 0; i < arguments.length; i++){
+            String[] commend = arguments[i].split(" ");
+
+            int v = Integer.parseInt(commend[1]);
+            if(commend[0].equals("I")){
+                q.push(v);
+            }else{
+                switch (v){
+                    case 1 : q.removeMax();
+                    break;
+                    case -1: q.removeMin();
+                    break;
                 }
             }
         }
-        int[] answer = new int[2];
-        if(!maxHeap.isEmpty()) {
-            answer[0] = maxHeap.remove();
-            answer[1] = minHeap.remove();
-        }
-        
-        return answer;
+
+
+        int[] aw = new int[]{q.getMaxValue(),q.getMinValue()};
+
+        return aw;
     }
+}
+
+class MidV{
+    private PriorityQueue<Integer> leftHeap;
+    private PriorityQueue<Integer> rightHeap;
+
+    public MidV(){
+        leftHeap = new PriorityQueue<>(10,Collections.reverseOrder());//최대값;
+        rightHeap = new PriorityQueue<>();//최소값
+    }
+
+
+    public void push(int v){
+        leftHeap.add(v);
+    }
+
+    public void removeMax(){
+
+        while(!rightHeap.isEmpty()){
+            leftHeap.add(rightHeap.poll());
+        }
+
+        leftHeap.poll();
+    }
+
+    public void removeMin(){
+
+        while(!leftHeap.isEmpty()){
+            rightHeap.add(leftHeap.poll());
+        }
+
+        rightHeap.poll();
+    }
+
+    public int getMaxValue(){
+
+        if(leftHeap.size() == 0 && rightHeap.size() == 0)
+            return 0;
+
+        while(!rightHeap.isEmpty()){
+            leftHeap.add(rightHeap.poll());
+        }
+
+        return leftHeap.peek();
+    }
+
+    public int getMinValue(){
+
+        if(leftHeap.size() == 0 && rightHeap.size() == 0)
+            return 0;
+
+        while(!leftHeap.isEmpty()){
+            rightHeap.add(leftHeap.poll());
+        }
+
+        return rightHeap.peek();
+    }
+
 }

@@ -1,16 +1,16 @@
 import java.util.*;
-import java.util.Arrays;
 
 class Solution {
     public boolean solution(String[] phoneBook) {
-        Arrays.sort(phoneBook);
         boolean result = true;
-        for (int i=0; i<phoneBook.length-1; i++) {
-            if (phoneBook[i+1].startsWith(phoneBook[i])) {
-                result = false;
-                break;
+        
+        Arrays.sort(phoneBook);
+        for(int i=phoneBook.length-1; i>0; i--) {
+            if(phoneBook[i].startsWith(phoneBook[i-1])) {
+                return false;
             }
         }
+        
         return result;
     }
 }

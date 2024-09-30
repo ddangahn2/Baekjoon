@@ -4,35 +4,21 @@ import java.util.List;
 
 class Solution {
     public String solution(int[] numbers) {
-        
         List<String> arr = new ArrayList<>();
         
-        for(int num: numbers) {
-            arr.add(Integer.toString(num));
+        for(int number: numbers) {
+            arr.add(Integer.toString(number));
         }
-        
         Collections.sort(arr, (a, b) -> (b+a).compareTo(a+b));
         
-        String answer = "";
-//         for(String str: arr) {
-//             if (answer.equals("0") && str.equals("0")) {
-//                 break;
-//             }
-//             answer += str;
-//         }
+        StringBuilder sb = new StringBuilder("");
         
-//         return answer;
-        
-        StringBuilder sb = new StringBuilder();
-        for(String i : arr) {
-            sb.append(i);
+        for(String str: arr){
+            sb.append(str);
         }
-        
-        answer = sb.toString();
-        if(answer.charAt(0) == '0') {
+        if('0' == sb.charAt(0)) {
             return "0";
-        }else {
-            return answer;
         }
+        return sb.toString();
     }
 }

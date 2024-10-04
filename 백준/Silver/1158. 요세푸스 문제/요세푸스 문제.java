@@ -7,20 +7,20 @@ public class Main {
         int N = sc.nextInt();
         int K = sc.nextInt();
 
-        LinkedList<Integer> ll = new LinkedList<>();
+        ArrayList<Integer> arr = new ArrayList<>();
         for(int i=1; i<=N; i++){
-            ll.add(i);
+            arr.add(i);
         }
         StringBuilder sb = new StringBuilder("<");
         boolean flag = true;
 
         int idx = -1;
-        while(!ll.isEmpty()){
+        while(arr.size() != 0){
             idx += K;
-            idx %= ll.size();
-            if(idx < 0) idx += ll.size();
+            idx %= arr.size();
+            if(idx < 0) idx += arr.size();
 
-            int removed = ll.remove(idx);
+            int removed = arr.remove(idx);
             idx -= 1;
             if(flag){
                 flag = false;

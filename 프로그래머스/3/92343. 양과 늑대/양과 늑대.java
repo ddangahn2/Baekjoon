@@ -18,21 +18,40 @@ class Solution {
         return max;
     }
     public static void search(int sh, int wo, int node, int[] info, Set<Integer> set){
-        // System.out.println(node);
         if(wo >= sh) return;
-        max = Math.max(max, sh);
         if(node == -1) return;
-
+        
+        Queue<Integer> q = new LinkedList<>();
+        Queue<Integer> q2 = new LinkedList<>();
+        
         set.remove(node);
-        for(int child : graph[node]){
-            if(child != -1){
-                set.add(child);
+        q.add(node);
+        int sheep = 0;
+        while(!q.isEmpty()){
+            int cur = q.remove();
+            
+            int child1 = graph[cur][0];
+            int child2 = graph[cur][1];
+            
+            if(child1 != -1){
+                if(info[child1] == 0) {
+                    q.add(child1);
+                    sheep++;
+                }
+                else q2.add(child1);
+            }
+            if(child2 != -1){
+                if(info[child2] == 0) {
+                    q.add(child2);
+                    sheep++;
+                }
+                else q2.add(child2);
             }
         }
-        
+        set.addAll(q2);
+        max = Math.max(max, sh+sheep);
         for(int adj: set){
-            if(info[adj] == 0) search(sh+1, wo, adj, info, new HashSet<>(set));
-            else search(sh, wo+1, adj, info, new HashSet<>(set));
+            search(sh+sheep, wo+1, adj, info, new HashSet<>(set));
         }
     }
 }

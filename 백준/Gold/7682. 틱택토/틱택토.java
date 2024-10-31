@@ -29,19 +29,30 @@ public class Main{
         if(Xcnt < Ocnt || Ocnt + 1 < Xcnt) return false;
 
         for(int i=0; i<3; i++){
-            if (game.charAt(3 * i) == game.charAt(3 * i + 1) && game.charAt(3 * i + 1) == game.charAt(3 * i + 2)) {
-                if (game.charAt(3 * i) == 'O') Owin = true;
-                else if (game.charAt(3 * i) == 'X') Xwin = true;
+            char pick = game.charAt(3*i);
+            if(pick == game.charAt(3*i+1) && pick == game.charAt(3*i+2)){
+                if(pick == 'O') Owin = true;
+                else if(pick == 'X') Xwin = true;
             }
         }
 
         for(int i=0; i<3; i++){
-            if (game.charAt(i) == game.charAt(i + 3) && game.charAt(i + 3) == game.charAt(i + 6)) {
-                if (game.charAt(i) == 'O') Owin = true;
-                else if (game.charAt(i) == 'X') Xwin = true;
+            char pick = game.charAt(i);
+            if(pick == game.charAt(3+i) && pick == game.charAt(6+i)){
+                if(pick == 'O') Owin = true;
+                else if(pick == 'X') Xwin = true;
             }
         }
 
+//        char pick = game.charAt(4);
+//        if(pick == game.charAt(0) && pick == game.charAt(8)){
+//            if(pick == 'O') Owin = true;
+//            else if(pick == 'X') Xwin = true;
+//        }
+//        if(pick == game.charAt(2) && 2 == game.charAt(6)){
+//            if(pick == 'O') Owin = true;
+//            else if(pick == 'X') Xwin = true;
+//        }
         if (game.charAt(0) == game.charAt(4) && game.charAt(4) == game.charAt(8)) {
             if (game.charAt(0) == 'O') Owin = true;
             else if (game.charAt(0) == 'X') Xwin = true;

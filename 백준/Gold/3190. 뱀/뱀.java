@@ -1,115 +1,97 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main{
-    static int N;
-    static int[][] board;
-    static Queue<PosChange> q = new ArrayDeque<>();
-    static Queue<SnakeBody> snake = new ArrayDeque<>();
-
-//    D 즉 오른쪽 기준
-    static int[] xP = {0,1,0,-1};
-    static int[] yP = {1,0,-1,0};
-
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        N = Integer.parseInt(sc.nextLine());
-        board = new int [N][N];
+        int N = Integer.parseInt(br.readLine());
+        int[][] board = new int[N][N];
 
-        int K = Integer.parseInt(sc.nextLine());
-        for (int i=0; i<K; i++) {
-            st = new StringTokenizer(sc.nextLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-            board[x-1][y-1] = -1;
-        }
-        int L = Integer.parseInt(sc.nextLine());
-        for (int i=0; i<L; i++) {
-            st = new StringTokenizer(sc.nextLine());
-            int t = Integer.parseInt(st.nextToken());
-            char pos = st.nextToken().charAt(0);
-            q.add(new PosChange(t, pos));
-        }
+        int[] dx = {0, 1, 0, -1};
+        int[] dy = {1, 0, -1, 0};
+        int dir = 0;
 
+        int sx = 0;
+        int sy = 0;
         int time = 0;
-        int position = 0;
-        int snakeStX=0, snakeStY=0;
-        snake.add(new SnakeBody(0,0));
-        board[0][0] = 1;
+        boolean flag = true;
 
-        PosChange pc = q.remove();
-        int nTime = pc.time;
-        char nPos = pc.pos;
-        boolean eatApple = false;
+        int K = Integer.parseInt(br.readLine());
+        for(int i=0; i<K; i++){
+            st = new StringTokenizer(br.readLine());
 
-        while (true) {
+            int row = Integer.parseInt(st.nextToken());
+            int col = Integer.parseInt(st.nextToken());
+
+            board[row-1][col-1] = 1;
+        }
+
+        Queue<int[]> snake = new LinkedList<>();
+        snake.add(new int[]{0, 0});
+
+        int L = Integer.parseInt(br.readLine());
+        Queue<Move> move = new LinkedList<>();
+
+        for(int i=0; i<L; i++){
+            st = new StringTokenizer(br.readLine());
+
+            int t = Integer.parseInt(st.nextToken());
+            char d = st.nextToken().charAt(0);
+
+            move.add(new Move(t, d));
+        }
+
+        while(true){
             time++;
-//            1. 머리 다음칸
-            snakeStX += xP[position];
-            snakeStY += yP[position];
 
-            if(isEnd(snakeStX, snakeStY)) {
+            sx += dx[dir];
+            sy += dy[dir];
+
+            if(sx < 0 || sx >= N || sy < 0 || sy >= N){
                 break;
             }
-            snake.add(new SnakeBody(snakeStX, snakeStY));
-
-            if (board[snakeStX][snakeStY] == -1) {
-                eatApple = true;
-            }
-            board[snakeStX][snakeStY] = 1;
-
-            if (eatApple) {
-                eatApple = false;
-            } else {
-                SnakeBody sb = snake.remove();
-                board[sb.x][sb.y] = 0;
-            }
-
-            if (time == nTime) {
-                if (nPos == 'D') {
-                    position++;
-                    if (position == 4) {
-                        position = 0;
-                    }
-                } else {
-                    position--;
-                    if (position == -1) {
-                        position = 3;
-                    }
+            for(int[] body: snake){
+                if(body[0] == sx && body[1] == sy) {
+                    flag = false;
+                    break;
                 }
-                pc = q.poll();
-                if (pc != null) {
-                    nTime = pc.time;
-                    nPos = pc.pos;
+            }
+            if(!flag) break;
+
+            snake.add(new int[]{sx, sy});
+
+            if(board[sx][sy] != 1) snake.poll();
+            else board[sx][sy] = 0;
+            
+
+            if(!move.isEmpty() && time == move.peek().t){
+                if(move.peek().d == 'D'){
+                    dir += 1;
+                    dir %= 4;
                 }
+                else{
+                    dir += 3;
+                    dir %= 4;
+                }
+                move.poll();
             }
         }
 
         System.out.println(time);
     }
-    public static boolean isEnd(int stX, int stY) {
-        if (stX < 0 || stX >= N || stY < 0 || stY >= N || board[stX][stY] == 1) {
-            return true;
-        }
-        return false;
-    }
 }
+class Move{
+    int t;
+    char d;
 
-class PosChange {
-    int time;
-    char pos;
-    PosChange(int time, char pos){
-        this.time = time;
-        this.pos = pos;
-    }
-}
-
-class SnakeBody {
-    int x;
-    int y;
-    SnakeBody(int x, int y) {
-        this.x = x;
-        this.y = y;
+    Move(int time, char dir){
+        this.t = time;
+        this.d = dir;
     }
 }

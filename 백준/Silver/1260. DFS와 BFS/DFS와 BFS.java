@@ -11,6 +11,8 @@ public class Main{
         int V = Integer.parseInt(st.nextToken());
 
         Map<Integer, ArrayList<Integer>> graph = new HashMap<>();
+        for(int i = 1; i <= N; i++) graph.put(i, new ArrayList<>());
+
         boolean[] visitB = new boolean[N+1];
         boolean[] visitD = new boolean[N+1];
 
@@ -19,9 +21,6 @@ public class Main{
 
             int v1 = Integer.parseInt(st.nextToken());
             int v2 = Integer.parseInt(st.nextToken());
-
-            graph.computeIfAbsent(v1, k->new ArrayList<>());
-            graph.computeIfAbsent(v2, k->new ArrayList<>());
 
             graph.get(v1).add(v2);
             graph.get(v2).add(v1);
@@ -41,9 +40,8 @@ public class Main{
             visited[node] = true;
             System.out.print(node + " ");
         }
-        if(graph.get(node) != null) {
-            for(int adjNode: graph.get(node)) DFS(graph, adjNode, visited);
-        }
+
+        for(int adjNode: graph.get(node)) DFS(graph, adjNode, visited);
     }
     public static void BFS(Map<Integer, ArrayList<Integer>> graph, int node, boolean[] visited){
         Queue<Integer> q = new LinkedList<>();
@@ -54,13 +52,11 @@ public class Main{
             int curNode = q.remove();
             System.out.print(curNode + " ");
 
-            if(graph.get(curNode) != null){
-                for(int adjNode: graph.get(curNode)){
-                    if(!visited[adjNode]) {
-                        q.add(adjNode);
-                        visited[adjNode] = true;
-                    }
-                }    
+            for(int adjNode: graph.get(curNode)){
+                if(!visited[adjNode]) {
+                    q.add(adjNode);
+                    visited[adjNode] = true;
+                }
             }
         }
     }

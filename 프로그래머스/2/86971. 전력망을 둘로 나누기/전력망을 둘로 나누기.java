@@ -22,10 +22,6 @@ class Solution {
         
         dfs(wires[0][0]);
         
-        // for(int i=0; i<child.length; i++){
-        //     System.out.println(i + ":" + child[i]);
-        // }
-        
         for(int[] wire: wires){
             int node1 = wire[0];
             int node2 = wire[1];

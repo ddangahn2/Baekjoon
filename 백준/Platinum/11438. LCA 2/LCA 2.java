@@ -59,7 +59,7 @@ public class Main {
         boolean[] visited = new boolean[N+1];
 
         int root = 1;
-        depth[root] = 1;
+        depth[root] = 0;
 
         Queue<Integer> q = new LinkedList<>();
         q.add(root);

@@ -1,0 +1,10 @@
+-- 코드를 작성해주세요
+SELECT
+    concat(floor((month(DIFFERENTIATION_DATE) - 1) / 3) + 1, 'Q') AS QUARTER,
+    COUNT(*) AS ECOLI_COUNT
+FROM
+    ECOLI_DATA
+GROUP BY
+    QUARTER
+ORDER BY
+    QUARTER

@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+
 using namespace std;
 
 // 주어진 숫자 n의 최대 약수를 찾는 함수
@@ -19,8 +20,7 @@ int maxDivisor(long long n) {
             // div2가 10,000,000 이하일 경우 div2를 반환
             if (div2 <= 10000000)
                 return (int)div2;
-
-            // div1이 10,000,000 이하일 경우 최대 약수 업데이트
+            
             if (div1 <= 10000000)
                 result = max(result, (int)div1);
         }
